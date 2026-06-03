@@ -30,7 +30,7 @@ pipeline {
                 cd myapp
                 . .venv/bin/activate
                 python main.py
-                python main.py --name=Brad
+                python main.py --name=Bashar
                 '''
             }
         }
