@@ -2,31 +2,39 @@ pipeline {
     agent { 
         node {
             label 'Docker-Agent-Python'
-            }
-      }
+        }
+    }
+
     triggers {
         pollSCM '* * * * *'
     }
+
     stages {
         stage('Build') {
             steps {
                 echo "Building.."
                 sh '''
                 cd myapp
-                pip install -r requirements.txt
+                python3 -m venv .venv
+                . .venv/bin/activate
+                python -m pip install --upgrade pip
+                python -m pip install -r requirements.txt
                 '''
             }
         }
+
         stage('Test') {
             steps {
                 echo "Testing.."
                 sh '''
                 cd myapp
-                python3 main.py
-                python3 main.py --name=Brad
+                . .venv/bin/activate
+                python main.py
+                python main.py --name=Brad
                 '''
             }
         }
+
         stage('Deliver') {
             steps {
                 echo 'Deliver....'
