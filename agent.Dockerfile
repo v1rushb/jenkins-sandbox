@@ -7,8 +7,9 @@ RUN apk add --no-cache \
     py3-pip \
     py3-virtualenv \
     docker-cli \
-    aws-cli \
     git \
     jq
+
+RUN pip3 install --no-cache-dir awscli
 
 USER jenkins
