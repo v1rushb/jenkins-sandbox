@@ -13,25 +13,7 @@ pipeline {
             steps {
                 sh '''
                     set -e
-                    chmod 700 ./ci/*.sh
-                    ls -l ./ci/askpass.sh
-                '''
-            }
-        }
-
-        stage('Test sudo') {
-            steps {
-                sh '''
-                    set -e
-
-                    whoami
-
-                    echo "Checking askpass:"
-                    test -f "$SUDO_ASKPASS"
-                    test -x "$SUDO_ASKPASS"
-
-                    echo "Testing sudo:"
-                    sudo -Ak whoami
+                    chmod 700 ./ci/askpass.sh
                 '''
             }
         }
