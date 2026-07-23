@@ -1,0 +1,40 @@
+pipeline {
+    agent {
+        label 'dev2'
+    }
+
+    environment {
+        SUDO_ASKPASS = './ci/askpass.sh'
+        JENKINS_SUDO_PASSWORD = credentials('jenkins-dev-sudo-pw-full')
+    }
+
+    stages {
+        stage('Test sudo') {
+            steps {
+                sh '''
+                    set -e
+                    whoami
+
+                    echo "Checking askpass:"
+                    test -f "$SUDO_ASKPASS"
+                    test -x "$SUDO_ASKPASS"
+
+                    echo "Testing sudo:"
+                    sudo -Ak whoami
+                '''
+            }
+        }
+
+        stage('Test Docker') {
+            steps {
+                sh '''
+                    set -e
+
+                    sudo -Ak docker info
+
+                    sudo -Ak docker run --rm public.ecr.aws/aws-cli/aws-cli --version
+                '''
+            }
+        }
+    }
+}
