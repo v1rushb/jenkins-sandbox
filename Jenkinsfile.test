@@ -9,10 +9,21 @@ pipeline {
     }
 
     stages {
+        stage('Initialize Scripts') {
+            steps {
+                sh '''
+                    set -e
+                    chmod 700 ./ci/*.sh
+                    ls -l ./ci/askpass.sh
+                '''
+            }
+        }
+
         stage('Test sudo') {
             steps {
                 sh '''
                     set -e
+
                     whoami
 
                     echo "Checking askpass:"
@@ -32,9 +43,17 @@ pipeline {
 
                     sudo -Ak docker info
 
-                    sudo -Ak docker run --rm public.ecr.aws/aws-cli/aws-cli --version
+                    sudo -Ak docker run --rm \
+                        public.ecr.aws/aws-cli/aws-cli \
+                        --version
                 '''
             }
+        }
+    }
+
+    post {
+        always {
+            sh 'sudo --remove-timestamp || true'
         }
     }
 }
